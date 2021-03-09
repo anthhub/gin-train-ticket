@@ -98,7 +98,7 @@ func SearchCityList(c *gin.Context) {
 		}
 	}
 
-	fmt.Printf("resultMatched=%v resultHot=%v \n ", resultMatched, resultHot)
+	// fmt.Printf("resultMatched=%v resultHot=%v \n ", resultMatched, resultHot)
 
 	c.JSON(http.StatusOK, append(resultMatched, resultHot...))
 }
