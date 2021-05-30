@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gin-train-ticket
+spec:
+  ports:
+    - protocol: TCP
+      name: web
+      port: 8000
+  selector:
+    app: gin-train-ticket
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: gin-train-ticket
+  labels:
+    app: gin-train-ticket
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gin-train-ticket
+  template:
+    metadata:
+      labels:
+        app: gin-train-ticket
+    spec:
+      imagePullSecrets:
+        - name: liuma-registry
+      containers:
+        - name: gin-train-ticket
+          image: registry.cn-qingdao.aliyuncs.com/anthhub/gin-train-ticket-server:{{ .Values.image.tag }}
+          resources:
+            limits:
+              memory: "32Mi"
+              cpu: "0.2"
+          ports:
+            - name: web
+              containerPort: 8000
