@@ -1,15 +1,15 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: go-server-route
+  name: gin-train-ticket-route
 spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`go.liuma.top`)
+    - match: Host(`gtt.liuma.top`)
       kind: Rule
       services:
-        - name: go-server
+        - name: gin-train-ticket
           port: 8000
 
 # 自签名
@@ -18,15 +18,15 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: go-server-route-secure
+  name: gin-train-ticket-route-secure
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`go.liuma.top`)
+    - match: Host(`gtt.liuma.top`)
       kind: Rule
       services:
-        - name: go-server
+        - name: gin-train-ticket
           port: 8000
   tls:
     secretName: who-tls

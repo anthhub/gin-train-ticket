@@ -2,17 +2,16 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
-
+    branches: [ main, master ]
 
 env:
 
   NAMESPACE: namespace
   TAG: 0.0.${{ github.run_number }}
-  REPO: https://anthhub.github.io/test-deploy
-  REQ: $(curl -s https://anthhub.github.io/test-deploy/latest?q=$RANDOM)
+  REPO: https://anthhub.github.io/gin-train-ticket
+  REQ: $(curl -s https://anthhub.github.io/gin-train-ticket/latest?q=$RANDOM)
 
 jobs:
   build:
@@ -39,7 +38,7 @@ jobs:
           registry: ${{ secrets.ALI_DOCKER_HUB_REGISTRY }}
           username: ${{ secrets.ALI_DOCKER_HUB_USN }}
           password: ${{ secrets.ALI_DOCKER_HUB_PWD }}
-          repository: anthhub/go-demo
+          repository: anthhub/gin-train-ticket-server
           tags: ${{ env.TAG }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
@@ -50,13 +49,13 @@ jobs:
           version: v3.4.0
 
       - name: Run Helm Package
-        run: cd ./helm && helm package ./config --version=${{ env.TAG }} && helm repo index . && ls > index.html && echo ${{ env.TAG }} > latest
+        run: cd ./.helm && helm package ./config --version=${{ env.TAG }} && helm repo index . && ls > index.html && echo ${{ env.TAG }} > latest
 
       - name: Deploy Helm
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./helm
+          publish_dir: ./.helm
 
       - name: Helm Setup
         timeout-minutes: 10
@@ -65,8 +64,6 @@ jobs:
           hosts: "118.190.37.169"
           privateKey: ${{ secrets.PRIVATE_KEY }}
           command: |
-            helm repo add test-deploy ${{ env.REPO }}
-
             until [ ${{ env.REQ }} = ${{ env.TAG }} ]
             do
               sleep 1
@@ -75,13 +72,14 @@ jobs:
             done
             echo "pass"
 
+            helm repo add gin-train-ticket ${{ env.REPO }}
             helm repo update
-            helm search repo test-deploy
-            if helm status test-deploy 
+            helm search repo gin-train-ticket
+            if helm status gin-train-ticket 
             then
-              helm upgrade test-deploy test-deploy/go-server-chart --version=${{ env.TAG }} --set image.tag=${{ env.TAG }}
+              helm upgrade gin-train-ticket gin-train-ticket/mychart --version=${{ env.TAG }} --set image.tag=${{ env.TAG }}
             else
-              helm install test-deploy test-deploy/go-server-chart --version=${{ env.TAG }} --set image.tag=${{ env.TAG }}
+              helm install gin-train-ticket gin-train-ticket/mychart --version=${{ env.TAG }} --set image.tag=${{ env.TAG }}
             fi
 
             helm ls
