@@ -1,12 +1,13 @@
 package searchcitylist
 
 import (
-	"basic/citylist"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	"github.com/anthhub/gin-train-ticket/citylist"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mozillazg/go-pinyin"
