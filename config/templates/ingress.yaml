@@ -6,7 +6,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`{{ .Values.service.app }}`)
+    - match: Host(`{{ .Values.route.host }}`)
       kind: Rule
       services:
         - name: {{ .Values.service.app }}
@@ -23,7 +23,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`{{ .Values.service.app }}`)
+    - match: Host(`{{ .Values.route.host }}`)
       kind: Rule
       services:
         - name: {{ .Values.service.app }}
