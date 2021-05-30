@@ -49,7 +49,7 @@ func GetCityList(c *gin.Context) {
 		fmt.Printf("Unmarshal err: %v; ", err)
 	}
 
-	fmt.Printf("data: %v; ", data)
+	// fmt.Printf("data: %v; ", data)
 
 	c.JSON(http.StatusOK, data)
 }
