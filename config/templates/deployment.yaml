@@ -1,40 +1,40 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: gin-train-ticket
+  name: "{{ .Values.service.app }}"
 spec:
   ports:
     - protocol: TCP
       name: web
-      port: 8000
+      port: "{{ .Values.service.port }}"
   selector:
-    app: gin-train-ticket
+    app: "{{ .Values.service.app }}"
 ---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: gin-train-ticket
+  name: "{{ .Values.service.app }}"
   labels:
-    app: gin-train-ticket
+    app: "{{ .Values.service.app }}"
 spec:
-  replicas: 2
+  replicas: "{{ .Values.pod.replicas }}"
   selector:
     matchLabels:
-      app: gin-train-ticket
+      app: "{{ .Values.service.app }}"
   template:
     metadata:
       labels:
-        app: gin-train-ticket
+        app: "{{ .Values.service.app }}"
     spec:
       imagePullSecrets:
         - name: liuma-registry
       containers:
-        - name: gin-train-ticket
-          image: registry.cn-qingdao.aliyuncs.com/anthhub/gin-train-ticket-server:{{ .Values.image.tag }}
+        - name: "{{ .Values.service.app }}"
+          image: r"{{ .Values.image.repository }}":"{{ .Values.image.tag }}"
           resources:
             limits:
               memory: "32Mi"
               cpu: "0.2"
           ports:
             - name: web
-              containerPort: 8000
+              containerPort: "{{ .Values.service.port }}"
