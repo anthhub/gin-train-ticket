@@ -6,7 +6,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`go.liuma.top`)
+    - match: Host(`gtt.liuma.top`)
       kind: Rule
       services:
         - name: gin-train-ticket
@@ -23,7 +23,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`go.liuma.top`)
+    - match: Host(`gtt.liuma.top`)
       kind: Rule
       services:
         - name: gin-train-ticket
