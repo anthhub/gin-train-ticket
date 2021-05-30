@@ -30,7 +30,7 @@ spec:
         - name: liuma-registry
       containers:
         - name: {{ .Values.service.app }}
-          image: r{{ .Values.image.repository }}:{{ .Values.image.tag }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           resources:
             limits:
               memory: "32Mi"
