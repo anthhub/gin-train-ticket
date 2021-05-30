@@ -35,7 +35,7 @@ type City struct {
 
 // GetCityList ...
 func GetCityList(c *gin.Context) {
-	file, err1 := ioutil.ReadFile("static/cities.json")
+	file, err1 := ioutil.ReadFile("./static/cities.json")
 
 	if err1 != nil {
 		fmt.Printf("ReadFile err: %v; ", err1)

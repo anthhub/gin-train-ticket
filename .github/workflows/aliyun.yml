@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Helm CI
 
 on:
   push:
@@ -7,11 +7,13 @@ on:
     branches: [ main, master ]
 
 env:
-
   NAMESPACE: namespace
   TAG: 0.0.${{ github.run_number }}
   REPO: https://anthhub.github.io/gin-train-ticket
   REQ: $(curl -s https://anthhub.github.io/gin-train-ticket/latest?q=$RANDOM)
+  APP: gin-train-ticket
+  HOST: "118.190.37.169"
+  DOMAIN: anthhub/gin-train-ticket
 
 jobs:
   build:
@@ -38,7 +40,7 @@ jobs:
           registry: ${{ secrets.ALI_DOCKER_HUB_REGISTRY }}
           username: ${{ secrets.ALI_DOCKER_HUB_USN }}
           password: ${{ secrets.ALI_DOCKER_HUB_PWD }}
-          repository: anthhub/gin-train-ticket-server
+          repository: ${{ secrets.HOST }}
           tags: ${{ env.TAG }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
@@ -48,20 +50,20 @@ jobs:
         with:
           version: v3.4.0
 
-      - name: Run Helm Package
+      - name: Package Helm 
         run: cd ./.helm && helm package ./config --version=${{ env.TAG }} && helm repo index . && ls > index.html && echo ${{ env.TAG }} > latest
 
-      - name: Deploy Helm
+      - name: Deploy Helm Repo
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./.helm
 
-      - name: Helm Setup
+      - name: Setup Helm
         timeout-minutes: 10
         uses: JimCronqvist/action-ssh@master
         with:
-          hosts: "118.190.37.169"
+          hosts: ${{ env.HOST }}
           privateKey: ${{ secrets.PRIVATE_KEY }}
           command: |
             until [ ${{ env.REQ }} = ${{ env.TAG }} ]
@@ -72,14 +74,14 @@ jobs:
             done
             echo "pass"
 
-            helm repo add gin-train-ticket ${{ env.REPO }}
+            helm repo add ${{ env.APP }} ${{ env.REPO }}
             helm repo update
-            helm search repo gin-train-ticket
-            if helm status gin-train-ticket 
+            helm search repo ${{ env.APP }} 
+            if helm status ${{ env.APP }} 
             then
-              helm upgrade gin-train-ticket gin-train-ticket/mychart --version=${{ env.TAG }} --set image.tag=${{ env.TAG }}
+              helm upgrade ${{ env.APP }} ${{ env.APP }}/mychart --version=${{ env.TAG }} --set image.tag=${{ env.TAG }}
             else
-              helm install gin-train-ticket gin-train-ticket/mychart --version=${{ env.TAG }} --set image.tag=${{ env.TAG }}
+              helm install ${{ env.APP }} ${{ env.APP }}/mychart --version=${{ env.TAG }} --set image.tag=${{ env.TAG }}
             fi
 
             helm ls

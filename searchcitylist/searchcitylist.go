@@ -31,7 +31,7 @@ func SearchCityList(c *gin.Context) {
 
 	fmt.Println(key, "")
 
-	file, _ := ioutil.ReadFile("cities.json")
+	file, _ := ioutil.ReadFile("./static/cities.json")
 
 	data := citylist.CityResult{}
 
