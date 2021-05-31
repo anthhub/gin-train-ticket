@@ -6,7 +6,7 @@ RUN go build ./main.go
 FROM alpine:3.13
 EXPOSE 8000
 COPY --from=builder /go/src/myapp/main /main
-COPY --from=builder /go/src/myapp/static/cities.json /static/cities.json
+COPY static ./static
 CMD ["/main"]
 
 
