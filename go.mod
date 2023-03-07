@@ -3,6 +3,7 @@ module github.com/anthhub/gin-train-ticket
 go 1.15
 
 require (
+	github.com/gin-gonic/gin v1.7.2
 	github.com/go-playground/validator/v10 v10.6.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect
@@ -13,9 +14,6 @@ require (
 	github.com/mozillazg/go-pinyin v0.18.0
 	github.com/stretchr/testify v1.7.0
 	github.com/ugorji/go v1.2.6 // indirect
-	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a // indirect
-	golang.org/x/sys v0.0.0-20210525143221-35b2ab0089ea // indirect
-	golang.org/x/text v0.3.6 // indirect
+	golang.org/x/crypto v0.1.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	github.com/gin-gonic/gin v1.7.2
 )
